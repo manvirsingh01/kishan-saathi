@@ -1,0 +1,139 @@
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+/**
+ * Analyze soil report PDF content and provide crop recommendations
+ */
+async function analyzeSoilReport(pdfText, location, farmDetails) {
+    try {
+        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+
+        const prompt = `You are an agricultural expert analyzing a soil test report for a farmer in India.
+
+Location: ${location.district}, ${location.state}
+Land Area: ${farmDetails.landArea} hectares
+Land Type: ${farmDetails.landType}
+Soil Type: ${farmDetails.soilType}
+
+Soil Test Report Content:
+${pdfText}
+
+Based on this soil report and location, please provide:
+
+1. Soil Analysis Summary (nutrients, pH, deficiencies)
+2. Top 5 Crop Recommendations (best suited for these soil conditions and this region)
+3. Fertilizer Recommendations
+4. Soil Improvement Suggestions
+
+Format your response as JSON with this structure:
+{
+  "soilAnalysis": {
+    "pH": "value",
+    "nitrogen": "level (low/medium/high)",
+    "phosphorus": "level",
+    "potassium": "level",
+    "organicCarbon": "level",
+    "deficiencies": ["nutrient1", "nutrient2"],
+    "strengths": ["aspect1", "aspect2"]
+  },
+  "cropRecommendations": [
+    {
+      "cropName": {"english": "name", "hindi": "नाम"},
+      "suitability": "excellent/good/moderate",
+      "reason": "why this crop is recommended",
+      "expectedYield": "X quintals/hectare",
+      "season": "Kharif/Rabi/Zaid",
+      "waterRequirement": "low/medium/high",
+      "marketPrice": "₹X-Y per quintal"
+    }
+  ],
+  "fertilizerPlan": {
+    "organic": ["fertilizer1", "fertilizer2"],
+    "chemical": [{"name": "NPK", "quantity": "X kg/hectare", "timing": "when to apply"}],
+    "micronutrients": ["nutrient1", "nutrient2"]
+  },
+  "soilImprovement": [
+    "suggestion 1",
+    "suggestion 2",
+    "suggestion 3"
+  ]
+}`;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+
+        // Try to parse JSON from response
+        let analysisData;
+        try {
+            // Remove markdown code blocks if present
+            const jsonText = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+            analysisData = JSON.parse(jsonText);
+        } catch (parseError) {
+            console.error('Failed to parse Gemini response as JSON:', parseError);
+            // Return a structured error response
+            analysisData = {
+                error: 'Failed to parse AI response',
+                rawResponse: text,
+                soilAnalysis: extractBasicSoilData(pdfText),
+                cropRecommendations: getFallbackRecommendations(farmDetails.soilType, location.state)
+            };
+        }
+
+        return analysisData;
+    } catch (error) {
+        console.error('Gemini API error:', error);
+        throw new Error('Failed to analyze soil report with AI');
+    }
+}
+
+/**
+ * Extract basic soil data if AI fails
+ */
+function extractBasicSoilData(pdfText) {
+    const data = {
+        pH: 'Not detected',
+        nitrogen: 'Unknown',
+        phosphorus: 'Unknown',
+        potassium: 'Unknown',
+        organicCarbon: 'Unknown',
+        deficiencies: [],
+        strengths: []
+    };
+
+    // Try to extract pH
+    const phMatch = pdfText.match(/pH[\s:]+(\d+\.?\d*)/i);
+    if (phMatch) data.pH = phMatch[1];
+
+    return data;
+}
+
+/**
+ * Fallback crop recommendations based on soil and region
+ */
+function getFallbackRecommendations(soilType, state) {
+    const recommendations = {
+        'alluvial': [
+            { cropName: { english: 'Rice', hindi: 'चावल' }, suitability: 'good', season: 'Kharif' },
+            { cropName: { english: 'Wheat', hindi: 'गेहूं' }, suitability: 'good', season: 'Rabi' },
+            { cropName: { english: 'Sugarcane', hindi: 'गन्ना' }, suitability: 'good', season: 'Perennial' }
+        ],
+        'black': [
+            { cropName: { english: 'Cotton', hindi: 'कपास' }, suitability: 'excellent', season: 'Kharif' },
+            { cropName: { english: 'Soybean', hindi: 'सोयाबीन' }, suitability: 'good', season: 'Kharif' },
+            { cropName: { english: 'Jowar', hindi: 'ज्वार' }, suitability: 'good', season: 'Kharif' }
+        ],
+        'red': [
+            { cropName: { english: 'Groundnut', hindi: 'मूंगफली' }, suitability: 'good', season: 'Kharif' },
+            { cropName: { english: 'Millets', hindi: 'बाजरा' }, suitability: 'good', season: 'Kharif' },
+            { cropName: { english: 'Pulses', hindi: 'दालें' }, suitability: 'good', season: 'Rabi' }
+        ]
+    };
+
+    return recommendations[soilType] || recommendations['alluvial'];
+}
+
+module.exports = {
+    analyzeSoilReport
+};

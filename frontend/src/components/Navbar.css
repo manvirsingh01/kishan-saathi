@@ -1,0 +1,314 @@
+.navbar {
+    /* Agricultural gradient: soil brown to fresh green */
+    background: linear-gradient(135deg,
+            #8B4513 0%,
+            /* Rich soil brown */
+            #6B4423 25%,
+            /* Dark earth */
+            #4A7C59 75%,
+            /* Crop green */
+            #2E7D32 100%
+            /* Fresh leaf green */
+        );
+
+    /* Texture overlay for earthy feel */
+    position: relative;
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 3px solid rgba(139, 69, 19, 0.3);
+}
+
+/* Subtle texture pattern overlay */
+.navbar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        repeating-linear-gradient(45deg,
+            transparent,
+            transparent 10px,
+            rgba(255, 255, 255, 0.02) 10px,
+            rgba(255, 255, 255, 0.02) 20px);
+    pointer-events: none;
+}
+
+.navbar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    position: relative;
+    z-index: 1;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+.navbar-brand:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.logo-icon {
+    font-size: 2.2rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    animation: gentle-sway 3s ease-in-out infinite;
+}
+
+@keyframes gentle-sway {
+
+    0%,
+    100% {
+        transform: rotate(-2deg);
+    }
+
+    50% {
+        transform: rotate(2deg);
+    }
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    text-shadow:
+        2px 2px 4px rgba(0, 0, 0, 0.4),
+        0 0 10px rgba(255, 215, 0, 0.3);
+    letter-spacing: 0.5px;
+}
+
+.navbar-menu {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    background: transparent;
+    /* No background by default */
+    border: 1px solid transparent;
+    /* Invisible border */
+}
+
+/* Agricultural icon decorations for nav links */
+.nav-link::before {
+    content: '🌿';
+    position: absolute;
+    left: 8px;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+    font-size: 0.8rem;
+}
+
+.nav-link:hover::before {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    /* Background only on hover */
+    border-color: rgba(255, 215, 0, 0.5);
+    transform: translateY(-2px);
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.2),
+        0 0 20px rgba(255, 215, 0, 0.2);
+    padding-left: 2rem;
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-language {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 193, 7, 0.2));
+    color: white;
+    border: 2px solid rgba(255, 215, 0, 0.4);
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-language::before {
+    content: '🌾';
+    position: absolute;
+    left: -20px;
+    transition: left 0.3s ease;
+}
+
+.btn-language:hover::before {
+    left: 8px;
+}
+
+.btn-language:hover {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.5), rgba(255, 193, 7, 0.4));
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+    padding-left: 2.5rem;
+}
+
+.user-menu {
+    position: relative;
+}
+
+.user-name {
+    color: white;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.3), rgba(46, 125, 50, 0.2));
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-name::before {
+    content: '👨‍🌾';
+    font-size: 1.2rem;
+}
+
+.user-menu:hover .user-name {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.5), rgba(46, 125, 50, 0.4));
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: 0.5rem;
+
+    /* Earthy dropdown design */
+    background: linear-gradient(135deg, #f5f5dc 0%, #faf8f3 100%);
+    min-width: 220px;
+    border-radius: 12px;
+    border: 2px solid rgba(139, 69, 19, 0.2);
+    box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(139, 69, 19, 0.1);
+    overflow: hidden;
+    animation: dropdownSlide 0.3s ease;
+}
+
+@keyframes dropdownSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.user-menu:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1.2rem;
+    color: #3E2723;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    position: relative;
+}
+
+.dropdown-item::before {
+    content: '🌱';
+    font-size: 1.1rem;
+    transition: transform 0.2s ease;
+}
+
+.dropdown-item:hover::before {
+    transform: scale(1.2) rotate(10deg);
+}
+
+.dropdown-item:hover {
+    background: linear-gradient(90deg, rgba(76, 175, 80, 0.15), transparent);
+    color: #2E7D32;
+    padding-left: 1.5rem;
+}
+
+.dropdown-item.logout {
+    color: #C62828;
+    border-top: 2px solid rgba(139, 69, 19, 0.1);
+}
+
+.dropdown-item.logout::before {
+    content: '🚪';
+}
+
+.dropdown-item.logout:hover {
+    background: linear-gradient(90deg, rgba(198, 40, 40, 0.1), transparent);
+}
+
+@media (max-width: 768px) {
+    .navbar-menu {
+        display: none;
+    }
+
+    .logo-text {
+        font-size: 1.25rem;
+    }
+
+    .navbar-brand {
+        padding: 0.4rem 0.8rem;
+    }
+
+    .btn-language {
+        padding: 0.4rem 1rem;
+        font-size: 0.85rem;
+    }
+}

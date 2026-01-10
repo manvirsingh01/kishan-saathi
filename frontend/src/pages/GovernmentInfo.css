@@ -1,0 +1,657 @@
+.government-info-page {
+    min-height: 100vh;
+    background: var(--color-bg);
+}
+
+.govt-container {
+    padding: 2rem 0;
+    max-width: 1200px;
+}
+
+/* Header */
+.govt-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 3px solid var(--color-primary);
+}
+
+.govt-header h1 {
+    font-size: 2rem;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+}
+
+/* Tabs */
+.govt-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--color-border);
+    overflow-x: auto;
+}
+
+.tab-btn {
+    padding: 1rem 1.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    white-space: nowrap;
+}
+
+.tab-btn:hover {
+    color: var(--color-primary);
+    background: rgba(44, 95, 45, 0.05);
+}
+
+.tab-btn.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+
+/* Content Sections */
+.govt-content {
+    min-height: 400px;
+}
+
+.info-section {
+    margin-bottom: 3rem;
+}
+
+.info-section h2 {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--color-border);
+}
+
+/* Schemes Grid */
+.schemes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+}
+
+.scheme-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+    border-left: 4px solid var(--color-primary);
+}
+
+.scheme-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.scheme-card h3 {
+    color: var(--color-primary);
+    font-size: 1.125rem;
+    margin-bottom: 0.75rem;
+}
+
+.scheme-desc {
+    color: var(--color-text-secondary);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.scheme-details {
+    background: var(--color-bg);
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+}
+
+.scheme-details p {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.scheme-link {
+    display: inline-block;
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--transition-base);
+}
+
+.scheme-link:hover {
+    color: var(--color-primary-dark);
+    transform: translateX(5px);
+}
+
+/* Subsidies List */
+.subsidies-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.subsidy-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+.subsidy-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.subsidy-header h3 {
+    color: var(--color-primary);
+    font-size: 1.125rem;
+}
+
+.amount-badge {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 700;
+}
+
+.subsidy-card p {
+    margin-bottom: 0.5rem;
+    color: var(--color-text-secondary);
+}
+
+/* Info Card */
+.info-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+.info-card p {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+/* Websites Grid */
+.websites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.website-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+    color: inherit;
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.website-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+    transform: scaleX(0);
+    transition: transform var(--transition-base);
+}
+
+.website-card:hover::before {
+    transform: scaleX(1);
+}
+
+.website-card:hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-4px);
+}
+
+.website-card h3 {
+    color: var(--color-primary);
+    margin-bottom: 0.75rem;
+}
+
+.website-card p {
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.external-link {
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Prices Tab */
+.disclaimer-box {
+    background: #fff3cd;
+    border-left: 4px solid #f59e0b;
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+    color: #92400e;
+}
+
+.price-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.search-input,
+.season-filter {
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    transition: all var(--transition-fast);
+}
+
+.search-input {
+    flex: 1;
+}
+
+.search-input:focus,
+.season-filter:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.1);
+}
+
+/* Crops Table */
+.crops-table-container {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 2rem;
+}
+
+.crops-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.crops-table thead {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: white;
+}
+
+.crops-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.crops-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.crops-table tbody tr:hover {
+    background: rgba(44, 95, 45, 0.05);
+}
+
+.crop-name {
+    display: flex;
+    flex-direction: column;
+}
+
+.crop-name strong {
+    color: var(--color-text-primary);
+}
+
+.crop-name small {
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+}
+
+.price-cell {
+    font-weight: 700;
+    color: var(--color-primary);
+    font-size: 1.1rem;
+}
+
+.msp-cell {
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
+.trend-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.trend-increasing {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.trend-stable {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.trend-decreasing {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.demand-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.demand-high {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.demand-medium {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.demand-low {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+/* Markets & Resources */
+.markets-grid,
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.market-card,
+.resource-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+}
+
+.resource-card {
+    text-decoration: none;
+    color: inherit;
+}
+
+.market-card:hover,
+.resource-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+.market-card h3,
+.resource-card h3 {
+    color: var(--color-primary);
+    margin-bottom: 0.75rem;
+}
+
+.facilities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.facility-tag {
+    background: var(--color-bg);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+
+/* Market Info Box */
+.market-info-box {
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border-left: 4px solid var(--color-primary);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    margin-top: 2rem;
+}
+
+.market-info-box h3 {
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+}
+
+/* Resources Tab */
+.departments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.dept-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+}
+
+.dept-card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.dept-card h3 {
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+}
+
+.services-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.service-tag {
+    background: var(--color-bg);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    border: 1px solid var(--color-border);
+}
+
+.contact-info {
+    color: var(--color-text-secondary);
+    margin: 1rem 0 0.5rem;
+}
+
+.dept-link {
+    display: inline-block;
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 0.5rem;
+}
+
+/* Portals Grid */
+.portals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.portal-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+    color: inherit;
+    transition: all var(--transition-base);
+    display: flex;
+    flex-direction: column;
+}
+
+.portal-card:hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-4px);
+}
+
+.portal-card h3 {
+    color: var(--color-primary);
+    margin-bottom: 0.75rem;
+}
+
+/* Institutions */
+.institutions-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.institution-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+.inst-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.inst-type {
+    background: var(--color-primary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Helplines */
+.helplines-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.helpline-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    text-align: center;
+}
+
+.helpline-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin: 1rem 0;
+}
+
+/* Mobile Apps */
+.apps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.app-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+.app-card h3 {
+    color: var(--color-primary);
+    margin-bottom: 0.75rem;
+}
+
+.app-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.platform-badge {
+    background: var(--color-bg);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+}
+
+/* Data Source */
+.data-source {
+    margin-top: 3rem;
+    padding: 1rem;
+    background: var(--color-bg);
+    border-radius: var(--radius-md);
+    text-align: center;
+    color: var(--color-text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .govt-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .govt-tabs {
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .schemes-grid,
+    .websites-grid,
+    .markets-grid,
+    .resources-grid,
+    .departments-grid,
+    .portals-grid,
+    .institutions-list,
+    .helplines-grid,
+    .apps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .crops-table-container {
+        overflow-x: auto;
+    }
+
+    .price-filters {
+        flex-direction: column;
+    }
+}
