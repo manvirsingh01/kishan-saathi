@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../App';
 import { APIProvider, Map, AdvancedMarker } from '@vis.gl/react-google-maps';
 import Navbar from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
 import RiskIndicator from '../components/RiskIndicator';
-import { climateAPI } from '../utils/api';
+import { climateAPI, profileAPI } from '../utils/api';
 import './MapDashboard.css';
 import './TooltipStyles.css';
 
@@ -20,15 +20,21 @@ function Dashboard() {
     const [locationError, setLocationError] = useState(null);
     const [gettingLocation, setGettingLocation] = useState(false);
 
-    // Default to farm location from user profile
-    const farmLocation = user?.farmDetails?.location?.coordinates || [77.2090, 28.6139];
-    const [defaultLng, defaultLat] = farmLocation;
+    // Get farm location reactively from user farmDetails
+    const farmLocation = useMemo(() => {
+        const coords = user?.farmDetails?.location?.coordinates;
+        if (coords && Array.isArray(coords) && coords.length === 2) {
+            return { lat: coords[1], lng: coords[0] };
+        }
+        return { lat: 28.6139, lng: 77.2090 }; // Default Delhi
+    }, [user?.farmDetails?.location?.coordinates]);
 
     // Use current location if available, otherwise use farm location
-    const displayLocation = currentLocation || { lat: defaultLat, lng: defaultLng };
+    const displayLocation = currentLocation || farmLocation;
 
     useEffect(() => {
-        requestCurrentLocation();
+        // Only request current location once, not override farm location
+        // requestCurrentLocation();
     }, []);
 
     useEffect(() => {
@@ -43,22 +49,34 @@ function Dashboard() {
         if (!navigator.geolocation) {
             setLocationError('Geolocation is not supported by your browser');
             setGettingLocation(false);
-            fetchClimateData(defaultLat, defaultLng);
+            fetchClimateData(farmLocation.lat, farmLocation.lng);
             return;
         }
 
         navigator.geolocation.getCurrentPosition(
-            (position) => {
+            async (position) => {
                 const { latitude, longitude } = position.coords;
                 setCurrentLocation({ lat: latitude, lng: longitude });
                 setLocationError(null);
                 setGettingLocation(false);
+
+                // Update farm location in profile
+                try {
+                    await profileAPI.updateLocation({
+                        coordinates: [longitude, latitude],
+                        state: user?.farmDetails?.location?.state || 'Unknown',
+                        district: 'Current Location'
+                    });
+                    console.log('Farm location updated to current location');
+                } catch (error) {
+                    console.error('Failed to update farm location:', error);
+                }
             },
             (error) => {
                 console.error('Geolocation error:', error);
                 setLocationError('Could not get your location. Using farm location instead.');
                 setGettingLocation(false);
-                fetchClimateData(defaultLat, defaultLng);
+                fetchClimateData(farmLocation.lat, farmLocation.lng);
             },
             { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
         );
@@ -213,30 +231,38 @@ function Dashboard() {
 
                 <div className="farm-info-card">
                     <div className="farm-header">
-                        <h3>{user.name}'s Farm</h3>
+                        <h3>🌾 {user.farmDetails?.name || `${user.name}'s Farm`}</h3>
                         <span className="farm-badge">
-                            {currentLocation ? 'Live Location' : 'Farm Location'}
+                            {currentLocation ? '📡 Live Location' : '🏠 Farm Base'}
                         </span>
                     </div>
                     <div className="farm-details">
                         <div className="detail-item">
+                            <span className="detail-icon">📍</span>
+                            <span className="detail-text">
+                                {user.farmDetails?.location?.village || user.farmDetails?.location?.district}, {user.farmDetails?.location?.state}
+                            </span>
+                        </div>
+                        <div className="detail-item">
                             <span className="detail-icon">📏</span>
-                            <span className="detail-text">{user.farmDetails.landArea} hectares</span>
+                            <span className="detail-text">{user.farmDetails?.landArea || 0} hectares</span>
                         </div>
                         <div className="detail-item">
                             <span className="detail-icon">🌾</span>
-                            <span className="detail-text">{user.farmDetails.soilType} soil</span>
+                            <span className="detail-text">{user.farmDetails?.soilType || 'N/A'} soil</span>
                         </div>
                         <div className="detail-item">
                             <span className="detail-icon">💧</span>
-                            <span className="detail-text">{user.farmDetails.landType}</span>
+                            <span className="detail-text">{user.farmDetails?.landType || 'N/A'}</span>
                         </div>
-                        <div className="detail-item">
-                            <span className="detail-icon">📍</span>
-                            <span className="detail-text">
-                                {user.farmDetails.location.district}, {user.farmDetails.location.state}
-                            </span>
-                        </div>
+                    </div>
+                    <div className="farm-quick-links">
+                        <a href="/government" className="quick-link">
+                            🏛️ {user.farmDetails?.location?.state} Policies & Prices
+                        </a>
+                        <a href="/profile" className="quick-link secondary">
+                            ✏️ Manage Farms
+                        </a>
                     </div>
                 </div>
             </div>

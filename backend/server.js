@@ -17,8 +17,8 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Sync database (alter: false to preserve existing data)
-sequelize.sync({ alter: false })
+// Sync database (force: true on first run to create new schema)
+sequelize.sync({ force: false })
   .then(() => console.log('✅ SQLite database synced successfully'))
   .catch((err) => console.error('❌ SQLite sync error:', err));
 

@@ -13,6 +13,9 @@ router.get('/stress', authMiddleware, async (req, res) => {
     try {
         const user = req.user;
 
+        // Get active farm using the model method
+        const activeFarm = user.getActiveFarm ? user.getActiveFarm() : (user.farms?.[0] || user.farmDetails);
+
         // Allow override with query params for current location
         let lat, lon, state, district;
 
@@ -20,15 +23,24 @@ router.get('/stress', authMiddleware, async (req, res) => {
             // Use provided coordinates (current location)
             lat = parseFloat(req.query.lat);
             lon = parseFloat(req.query.lng);
-            state = req.query.state || user.farmDetails.location.state;
+            state = req.query.state || activeFarm?.location?.state || 'Unknown';
             district = req.query.district || 'Current Location';
+        } else if (activeFarm?.location?.coordinates) {
+            // Use active farm location
+            const [lng, latitude] = activeFarm.location.coordinates;
+            lat = latitude;
+            lon = lng;
+            state = activeFarm.location.state || 'Unknown';
+            district = activeFarm.location.district || 'Unknown';
         } else {
-            // Use farm location
-            const { coordinates } = user.farmDetails.location;
-            [lon, lat] = coordinates;
-            state = user.farmDetails.location.state;
-            district = user.farmDetails.location.district;
+            // Default location (Delhi)
+            lat = 28.6139;
+            lon = 77.2090;
+            state = 'Delhi';
+            district = 'New Delhi';
         }
+
+        console.log(`Fetching climate data for: ${district}, ${state} (${lat}, ${lon})`);
 
         // Fetch weather data - Try Google Weather API first, fallback to Open-Meteo
         let weatherData, googleAnalysis;
@@ -37,7 +49,10 @@ router.get('/stress', authMiddleware, async (req, res) => {
             // Try Google Weather API with comprehensive analysis
             googleAnalysis = await googleWeatherService.analyzeClimateForAgriculture(lat, lon);
 
-            if (googleAnalysis && googleAnalysis.current) {
+            // Validate that we have real data (not zeros)
+            if (googleAnalysis && googleAnalysis.current &&
+                googleAnalysis.current.temperature > 0 &&
+                googleAnalysis.current.humidity > 0) {
                 // Transform Google Weather data to our format
                 weatherData = {
                     current: {
@@ -48,7 +63,10 @@ router.get('/stress', authMiddleware, async (req, res) => {
                         precipitation: 0,
                         uvIndex: googleAnalysis.current.uvIndex,
                         pressure: googleAnalysis.current.pressure,
-                        feelsLike: googleAnalysis.current.temperature
+                        feelsLike: googleAnalysis.current.temperature,
+                        tempMax: googleAnalysis.current.temperature + 5,
+                        tempMin: googleAnalysis.current.temperature - 5,
+                        description: googleAnalysis.current.condition || 'Clear'
                     },
                     forecast: googleAnalysis.daily?.map(day => ({
                         date: day.date,
@@ -75,6 +93,8 @@ router.get('/stress', authMiddleware, async (req, res) => {
                 weatherData = {
                     current: {
                         temp: 28,
+                        tempMin: 22,
+                        tempMax: 34,
                         humidity: 65,
                         windSpeed: 12,
                         cloudCover: 40,

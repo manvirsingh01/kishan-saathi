@@ -3,12 +3,19 @@ import Navbar from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
 import RiskIndicator from '../components/RiskIndicator';
 import { climateAPI } from '../utils/api';
+import { useAuth } from '../App';
 import './ClimateStress.css';
 
 function ClimateStress() {
+    const { user } = useAuth();
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState(null);
     const [error, setError] = useState('');
+
+    // Get active farm location
+    const farmLocation = user?.farmDetails?.location || {};
+    const locationDisplay = farmLocation.village || farmLocation.district || 'Your Farm';
+    const stateDisplay = farmLocation.state || '';
 
     const fetchClimateStress = async () => {
         setLoading(true);
@@ -26,7 +33,7 @@ function ClimateStress() {
 
     useEffect(() => {
         fetchClimateStress();
-    }, []);
+    }, [user?.activeFarmId]); // Refetch when active farm changes
 
     return (
         <div className="page">
@@ -35,7 +42,7 @@ function ClimateStress() {
             <div className="container" style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
                 <h1>Climate Stress Detection</h1>
                 <p className="text-secondary mb-lg">
-                    Real-time analysis of heat, soil moisture, and rainfall patterns affecting your farm
+                    📍 Real-time analysis for <strong>{locationDisplay}{stateDisplay ? `, ${stateDisplay}` : ''}</strong>
                 </p>
 
                 {error && <div className="alert alert-error">{error}</div>}

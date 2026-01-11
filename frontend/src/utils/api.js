@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance
 const api = axios.create({
-    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
+    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5001/api',
     headers: {
         'Content-Type': 'application/json'
     }
@@ -47,7 +47,13 @@ export const authAPI = {
 export const profileAPI = {
     getProfile: () => api.get('/profile'),
     updateProfile: (data) => api.put('/profile', data),
-    updateLocation: (location) => api.put('/profile/location', location)
+    updateLocation: (location) => api.put('/profile/location', location),
+    // Farm management
+    getFarms: () => api.get('/profile/farms'),
+    addFarm: (farmData) => api.post('/profile/farms', farmData),
+    updateFarm: (farmId, data) => api.put(`/profile/farms/${farmId}`, data),
+    deleteFarm: (farmId) => api.delete(`/profile/farms/${farmId}`),
+    activateFarm: (farmId) => api.put(`/profile/farms/${farmId}/activate`)
 };
 
 // Climate APIs

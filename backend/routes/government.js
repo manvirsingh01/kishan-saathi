@@ -132,7 +132,20 @@ router.get('/ai/resources', authMiddleware, async (req, res) => {
 router.get('/ai/comprehensive', authMiddleware, async (req, res) => {
     try {
         const user = req.user;
-        const { state, district } = user.farmDetails.location;
+
+        // Get active farm using the model method
+        const activeFarm = user.getActiveFarm ? user.getActiveFarm() : (user.farms?.[0] || user.farmDetails);
+
+        if (!activeFarm || !activeFarm.location) {
+            return res.status(400).json({
+                error: 'No farm location found. Please add a farm with location details.'
+            });
+        }
+
+        const state = activeFarm.location.state || 'Rajasthan';
+        const district = activeFarm.location.district || 'Jodhpur';
+
+        console.log(`Fetching government info for: ${state}, ${district}`);
 
         const info = await governmentInfoService.getComprehensiveGovernmentInfo(state, district);
         res.json(info);

@@ -1,0 +1,218 @@
+/* Farm Selector Bar - Below Navbar */
+.farm-selector-bar {
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+    border-bottom: 1px solid #d1fae5;
+    padding: 0.5rem 0;
+    position: sticky;
+    top: 60px;
+    z-index: 90;
+}
+
+.farm-selector-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.farm-selector-label {
+    font-size: 0.875rem;
+    color: #166534;
+    font-weight: 500;
+}
+
+/* Dropdown Container */
+.farm-dropdown-container {
+    position: relative;
+    flex: 1;
+    max-width: 350px;
+}
+
+.farm-dropdown-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid #a7f3d0;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.farm-dropdown-trigger:hover {
+    border-color: #10b981;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+}
+
+.farm-dropdown-trigger:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.farm-name {
+    font-weight: 600;
+    color: #065f46;
+    font-size: 0.9rem;
+}
+
+.farm-location {
+    font-size: 0.75rem;
+    color: #6b7280;
+    flex: 1;
+}
+
+.dropdown-arrow {
+    font-size: 0.65rem;
+    color: #6b7280;
+    transition: transform 0.2s ease;
+}
+
+.dropdown-arrow.open {
+    transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.farm-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    animation: slideDown 0.2s ease;
+    z-index: 100;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.farm-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: none;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    text-align: left;
+}
+
+.farm-dropdown-item:hover {
+    background: #f0fdf4;
+}
+
+.farm-dropdown-item.active {
+    background: #ecfdf5;
+    border-left: 3px solid #10b981;
+}
+
+.farm-item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.farm-item-name {
+    font-weight: 500;
+    color: #1f2937;
+    font-size: 0.875rem;
+}
+
+.farm-item-location {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.farm-item-area {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    background: #f3f4f6;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.active-badge {
+    color: #10b981;
+    font-weight: bold;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 0.25rem 0;
+}
+
+.farm-dropdown-item.add-farm {
+    color: #10b981;
+    font-weight: 500;
+}
+
+.farm-dropdown-item.add-farm:hover {
+    background: #ecfdf5;
+}
+
+.add-icon {
+    font-size: 1rem;
+}
+
+/* Add Farm Button (beside dropdown) */
+.add-farm-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.add-farm-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .farm-selector-bar {
+        top: 56px;
+    }
+
+    .farm-selector-content {
+        gap: 0.5rem;
+    }
+
+    .farm-selector-label {
+        display: none;
+    }
+
+    .farm-dropdown-container {
+        max-width: none;
+        flex: 1;
+    }
+
+    .farm-dropdown-trigger {
+        padding: 0.4rem 0.75rem;
+    }
+}

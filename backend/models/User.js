@@ -33,11 +33,25 @@ const User = sequelize.define('User', {
         }
     },
 
-    // Farm Details (stored as JSON)
-    farmDetails: {
+    // Multiple Farms (stored as JSON array)
+    farms: {
         type: DataTypes.JSON,
         allowNull: false,
-        defaultValue: {}
+        defaultValue: []
+    },
+
+    // Active farm ID
+    activeFarmId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null
+    },
+
+    // Legacy farmDetails (for backward compatibility during migration)
+    farmDetails: {
+        type: DataTypes.JSON,
+        allowNull: true,
+        defaultValue: null
     },
 
     // Preferences
@@ -69,11 +83,44 @@ const User = sequelize.define('User', {
                 const salt = await bcrypt.genSalt(10);
                 user.password = await bcrypt.hash(user.password, salt);
             }
+            // Migrate farmDetails to farms array if present
+            if (user.farmDetails && (!user.farms || user.farms.length === 0)) {
+                const farmId = `farm_${Date.now()}`;
+                user.farms = [{
+                    id: farmId,
+                    name: 'My Farm',
+                    ...user.farmDetails
+                }];
+                user.activeFarmId = farmId;
+            }
         },
         beforeUpdate: async (user) => {
             if (user.changed('password')) {
                 const salt = await bcrypt.genSalt(10);
                 user.password = await bcrypt.hash(user.password, salt);
+            }
+        },
+        afterFind: async (result) => {
+            // Migrate legacy data on read
+            const migrateUser = async (user) => {
+                if (user && user.farmDetails && (!user.farms || user.farms.length === 0)) {
+                    const farmId = `farm_${Date.now()}`;
+                    user.farms = [{
+                        id: farmId,
+                        name: 'My Farm',
+                        ...user.farmDetails
+                    }];
+                    user.activeFarmId = farmId;
+                    await user.save({ hooks: false });
+                }
+            };
+
+            if (Array.isArray(result)) {
+                for (const user of result) {
+                    await migrateUser(user);
+                }
+            } else {
+                await migrateUser(result);
             }
         }
     }
@@ -84,10 +131,26 @@ User.prototype.comparePassword = async function (candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
 };
 
-// Override toJSON to exclude password
+// Get active farm
+User.prototype.getActiveFarm = function () {
+    if (!this.farms || this.farms.length === 0) return null;
+    if (this.activeFarmId) {
+        return this.farms.find(f => f.id === this.activeFarmId) || this.farms[0];
+    }
+    return this.farms[0];
+};
+
+// Override toJSON to exclude password and include computed farmDetails
 User.prototype.toJSON = function () {
     const values = { ...this.get() };
     delete values.password;
+
+    // For backward compatibility, set farmDetails to active farm
+    const activeFarm = this.getActiveFarm();
+    if (activeFarm) {
+        values.farmDetails = activeFarm;
+    }
+
     return values;
 };
 
