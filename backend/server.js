@@ -17,8 +17,9 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Sync database (force: true on first run to create new schema)
-sequelize.sync({ force: false })
+// Sync database (force on Vercel since /tmp is empty on cold starts)
+const isVercel = process.env.VERCEL === '1';
+sequelize.sync({ force: isVercel })
   .then(() => console.log('✅ SQLite database synced successfully'))
   .catch((err) => console.error('❌ SQLite sync error:', err));
 
@@ -56,9 +57,14 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
-});
+// Start server only in development (not on Vercel)
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5001;
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  });
+}
+
+// Export for Vercel serverless
+module.exports = app;
