@@ -41,6 +41,55 @@ function Login() {
         }
     };
 
+    const handleDemoLogin = async () => {
+        setLoading(true);
+        setError('');
+
+        const demoCredentials = {
+            email: 'demo@kishansaathi.com',
+            password: 'demo123'
+        };
+
+        try {
+            // Try to login first
+            const response = await authAPI.login(demoCredentials);
+            login(response.data.user, response.data.token);
+            navigate('/dashboard');
+        } catch (loginError) {
+            // If login fails, try to register the demo user (likely doesn't exist)
+            try {
+                console.log('Demo user not found, registering...');
+                const demoUser = {
+                    name: 'Kishan Demo',
+                    email: demoCredentials.email,
+                    password: demoCredentials.password,
+                    phone: '9876543210',
+                    farmDetails: {
+                        location: {
+                            coordinates: [73.0243, 26.2389], // Jodhpur
+                            state: 'Rajasthan',
+                            district: 'Jodhpur'
+                        },
+                        landArea: 5.5,
+                        landType: 'irrigated',
+                        soilType: 'desert',
+                        waterSource: [],
+                        currentCrops: []
+                    }
+                };
+
+                const registerResponse = await authAPI.register(demoUser);
+                login(registerResponse.data.user, registerResponse.data.token);
+                navigate('/dashboard');
+            } catch (registerError) {
+                console.error('Demo registration failed:', registerError);
+                setError('Demo login failed. Please try again.');
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="auth-container">
             <div className="auth-card">
@@ -78,9 +127,21 @@ function Login() {
                         />
                     </div>
 
-                    <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-                        {loading ? t('common.loading') : t('auth.loginButton')}
-                    </button>
+                    <div className="auth-actions">
+                        <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+                            {loading ? t('common.loading') : t('auth.loginButton')}
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={handleDemoLogin}
+                            className="btn btn-secondary btn-block mt-md"
+                            disabled={loading}
+                            style={{ backgroundColor: '#4caf50', color: 'white' }}
+                        >
+                            🚀 Easy Demo Login
+                        </button>
+                    </div>
                 </form>
 
                 <div className="auth-footer">
