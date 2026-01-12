@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../App';
@@ -77,6 +77,7 @@ function Profile() {
 
     // State for pincode lookup
     const [lookingUpPincode, setLookingUpPincode] = useState(false);
+    const pincodeTimeoutRef = useRef(null);
 
     // Lookup location by pincode using India Post API
     const lookupPincode = async (pincode) => {
@@ -135,9 +136,18 @@ function Profile() {
                 location: { ...farmForm.location, [field]: value }
             });
 
-            // Auto-lookup when pincode is 6 digits
-            if (field === 'pincode' && value.length === 6 && /^\d{6}$/.test(value)) {
-                lookupPincode(value);
+            // Debounced auto-lookup when pincode is 6 digits
+            if (field === 'pincode') {
+                // Clear any pending timeout
+                if (pincodeTimeoutRef.current) {
+                    clearTimeout(pincodeTimeoutRef.current);
+                }
+                // Only lookup if valid 6-digit pincode after 500ms delay
+                if (value.length === 6 && /^\d{6}$/.test(value)) {
+                    pincodeTimeoutRef.current = setTimeout(() => {
+                        lookupPincode(value);
+                    }, 500);
+                }
             }
         } else {
             setFarmForm({ ...farmForm, [name]: value });
@@ -260,7 +270,8 @@ function Profile() {
 
     const getDistrictsForState = (state) => INDIAN_STATES[state] || [];
 
-    const FarmFormModal = ({ title, onSubmit, onCancel }) => (
+    // Render farm form modal JSX (not a component to avoid re-mounting)
+    const renderFarmFormModal = (title, onSubmit, onCancel) => (
         <div className="modal-overlay" onClick={onCancel}>
             <div className="modal-content" onClick={e => e.stopPropagation()}>
                 <h2>{title}</h2>
@@ -545,21 +556,17 @@ function Profile() {
             </div>
 
             {/* Add Farm Modal */}
-            {showAddFarm && (
-                <FarmFormModal
-                    title="➕ Add New Farm"
-                    onSubmit={handleAddFarm}
-                    onCancel={() => { setShowAddFarm(false); resetFarmForm(); }}
-                />
+            {showAddFarm && renderFarmFormModal(
+                "➕ Add New Farm",
+                handleAddFarm,
+                () => { setShowAddFarm(false); resetFarmForm(); }
             )}
 
             {/* Edit Farm Modal */}
-            {editingFarm && (
-                <FarmFormModal
-                    title={`✏️ Edit ${editingFarm.name}`}
-                    onSubmit={handleUpdateFarm}
-                    onCancel={() => { setEditingFarm(null); resetFarmForm(); }}
-                />
+            {editingFarm && renderFarmFormModal(
+                `✏️ Edit ${editingFarm.name}`,
+                handleUpdateFarm,
+                () => { setEditingFarm(null); resetFarmForm(); }
             )}
         </div>
     );

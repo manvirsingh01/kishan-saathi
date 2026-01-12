@@ -3,6 +3,28 @@ const router = express.Router();
 const { authMiddleware } = require('../middleware/auth');
 const { FileUserModel, FileFarmModel } = require('../models/fileModels');
 
+// Helper function to transform raw farm to include nested location object
+function transformFarm(farm) {
+    return {
+        id: farm.id,
+        name: farm.name,
+        location: {
+            coordinates: [farm.longitude || 0, farm.latitude || 0],
+            state: farm.state || '',
+            district: farm.district || '',
+            village: farm.village || '',
+            pincode: farm.pincode || ''
+        },
+        landArea: farm.landArea || 0,
+        landType: farm.landType || '',
+        soilType: farm.soilType || ''
+    };
+}
+
+function transformFarms(farms) {
+    return farms.map(transformFarm);
+}
+
 // @route   GET /api/profile
 router.get('/', authMiddleware, async (req, res) => {
     try {
@@ -66,8 +88,8 @@ router.put('/location', authMiddleware, async (req, res) => {
 router.get('/farms', authMiddleware, async (req, res) => {
     try {
         const user = await FileUserModel.findById(req.user.id);
-        const farms = await FileFarmModel.findByUserId(req.user.id);
-        res.json({ farms: farms || [], activeFarmId: user?.activeFarmId });
+        const rawFarms = await FileFarmModel.findByUserId(req.user.id);
+        res.json({ farms: transformFarms(rawFarms) || [], activeFarmId: user?.activeFarmId });
     } catch (error) {
         console.error('Farms fetch error:', error);
         res.status(500).json({ error: 'Server error' });
@@ -103,8 +125,18 @@ router.post('/farms', authMiddleware, async (req, res) => {
             await FileUserModel.update(req.user.id, { activeFarmId: newFarm.id });
         }
 
-        const farms = await FileFarmModel.findByUserId(req.user.id);
-        res.status(201).json({ message: 'Farm added successfully', farm: newFarm, farms, activeFarmId: user.activeFarmId || newFarm.id });
+        // Get all farms and transform them with location object
+        const farms = transformFarms(await FileFarmModel.findByUserId(req.user.id));
+
+        // Transform the new farm for reply
+        const transformedFarm = farms.find(f => f.id === newFarm.id);
+
+        res.status(201).json({
+            message: 'Farm added successfully',
+            farm: transformedFarm,
+            farms,
+            activeFarmId: user.activeFarmId || newFarm.id
+        });
     } catch (error) {
         console.error('Farm creation error:', error);
         res.status(500).json({ error: 'Server error during farm creation' });
@@ -132,8 +164,8 @@ router.put('/farms/:farmId', authMiddleware, async (req, res) => {
         }
 
         const updatedFarm = await FileFarmModel.update(farmId, updates);
-        const farms = await FileFarmModel.findByUserId(req.user.id);
-        res.json({ message: 'Farm updated successfully', farm: updatedFarm, farms });
+        const farms = transformFarms(await FileFarmModel.findByUserId(req.user.id));
+        res.json({ message: 'Farm updated successfully', farm: transformFarm(updatedFarm), farms });
     } catch (error) {
         console.error('Farm update error:', error);
         res.status(500).json({ error: 'Server error during farm update' });
@@ -147,7 +179,8 @@ router.delete('/farms/:farmId', authMiddleware, async (req, res) => {
         await FileFarmModel.delete(farmId);
 
         const user = await FileUserModel.findById(req.user.id);
-        const farms = await FileFarmModel.findByUserId(req.user.id);
+        const rawFarms = await FileFarmModel.findByUserId(req.user.id);
+        const farms = transformFarms(rawFarms);
 
         let activeFarmId = user.activeFarmId;
         if (activeFarmId === farmId) {

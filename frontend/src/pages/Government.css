@@ -1,0 +1,379 @@
+.government-page {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8f5e9 100%);
+    min-height: 100vh;
+}
+
+.gov-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.gov-header h1 {
+    margin: 0;
+    color: #1a5d1a;
+    font-size: 1.8rem;
+}
+
+.location-badge {
+    background: linear-gradient(135deg, #2e7d32 0%, #388e3c 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 8px rgba(46, 125, 50, 0.3);
+}
+
+/* Tabs */
+.gov-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    background: white;
+    padding: 0.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.tab-btn {
+    padding: 0.75rem 1.25rem;
+    border: none;
+    background: transparent;
+    color: #555;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    background: #f0f7f0;
+    color: #2e7d32;
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, #2e7d32 0%, #388e3c 100%);
+    color: white;
+}
+
+/* Sections */
+.gov-section {
+    margin-bottom: 2rem;
+}
+
+.gov-section h2 {
+    color: #1a5d1a;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e8f5e9;
+}
+
+/* Scheme Cards */
+.schemes-grid,
+.subsidies-grid,
+.websites-grid,
+.markets-grid,
+.helplines-grid,
+.depts-grid,
+.institutions-grid,
+.apps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.scheme-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #1976d2;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.scheme-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.scheme-card.state {
+    border-left-color: #ff9800;
+}
+
+.scheme-card h3 {
+    margin: 0 0 0.5rem 0;
+    color: #1a1a1a;
+    font-size: 1.1rem;
+}
+
+.scheme-card p {
+    margin: 0 0 0.75rem 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.scheme-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.tag {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.tag.benefit {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.scheme-link {
+    display: inline-block;
+    color: #1976d2;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.scheme-link:hover {
+    text-decoration: underline;
+}
+
+/* Subsidy Cards */
+.subsidy-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.subsidy-card h4 {
+    margin: 0 0 0.5rem 0;
+    color: #1a1a1a;
+}
+
+.subsidy-amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2e7d32;
+    margin-bottom: 0.5rem;
+}
+
+.subsidy-card p {
+    margin: 0 0 0.25rem 0;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.subsidy-card small {
+    color: #888;
+}
+
+/* Website Cards */
+.website-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: block;
+}
+
+.website-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.website-card h4 {
+    margin: 0 0 0.5rem 0;
+    color: #1976d2;
+}
+
+.website-card p {
+    margin: 0;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+/* Prices Table */
+.prices-table-wrapper {
+    overflow-x: auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.prices-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.prices-table th,
+.prices-table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.prices-table th {
+    background: #f5f5f5;
+    color: #333;
+    font-weight: 600;
+}
+
+.prices-table tbody tr:hover {
+    background: #f9fbe7;
+}
+
+.price-cell {
+    font-weight: 600;
+    color: #2e7d32;
+}
+
+.trend {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.trend.increasing {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.trend.decreasing {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.trend.stable {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+/* Market Cards */
+.market-card,
+.helpline-card,
+.dept-card,
+.inst-card,
+.app-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.market-card h4,
+.helpline-card h4,
+.dept-card h4,
+.inst-card h4,
+.app-card h4 {
+    margin: 0 0 0.5rem 0;
+    color: #1a1a1a;
+}
+
+.facilities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+}
+
+.facility-tag,
+.lang-tag {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
+
+.helpline-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1976d2;
+    margin: 0.5rem 0;
+}
+
+.languages {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+}
+
+.dept-card ul,
+.inst-card ul {
+    margin: 0.5rem 0;
+    padding-left: 1.2rem;
+    color: #666;
+}
+
+.dept-card a,
+.inst-card a {
+    color: #1976d2;
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+.inst-type {
+    color: #888;
+    font-size: 0.85rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.platform {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+/* Disclaimer */
+.disclaimer {
+    background: #fff3e0;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    color: #ef6c00;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+}
+
+/* Last Updated */
+.last-updated {
+    text-align: center;
+    color: #888;
+    font-size: 0.8rem;
+    padding: 1rem 0 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .gov-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .gov-tabs {
+        flex-direction: column;
+    }
+
+    .schemes-grid,
+    .subsidies-grid {
+        grid-template-columns: 1fr;
+    }
+}

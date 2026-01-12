@@ -97,7 +97,24 @@ const FileUserModel = {
         const user = await this.findById(id);
         if (!user) return null;
 
-        const farms = await FileFarmModel.findByUserId(id);
+        const rawFarms = await FileFarmModel.findByUserId(id);
+
+        // Transform farms to include location object
+        const farms = rawFarms.map(farm => ({
+            id: farm.id,
+            name: farm.name,
+            location: {
+                coordinates: [farm.longitude || 0, farm.latitude || 0],
+                state: farm.state || '',
+                district: farm.district || '',
+                village: farm.village || '',
+                pincode: farm.pincode || ''
+            },
+            landArea: farm.landArea || 0,
+            landType: farm.landType || '',
+            soilType: farm.soilType || ''
+        }));
+
         const activeFarm = farms.find(f => f.id === user.activeFarmId) || farms[0];
 
         return {
@@ -108,19 +125,7 @@ const FileUserModel = {
             role: user.role,
             farms: farms,
             activeFarmId: user.activeFarmId,
-            farmDetails: activeFarm ? {
-                name: activeFarm.name,
-                location: {
-                    coordinates: [activeFarm.longitude, activeFarm.latitude],
-                    state: activeFarm.state,
-                    district: activeFarm.district,
-                    village: activeFarm.village,
-                    pincode: activeFarm.pincode
-                },
-                landArea: activeFarm.landArea,
-                landType: activeFarm.landType,
-                soilType: activeFarm.soilType
-            } : null
+            farmDetails: activeFarm || null
         };
     }
 };

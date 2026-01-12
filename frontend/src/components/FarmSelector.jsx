@@ -35,8 +35,7 @@ function FarmSelector() {
             updateUser(updatedUser);
 
             setIsOpen(false);
-            // Reload page to refresh all data for new farm
-            window.location.reload();
+            // No page reload needed - React state update will refresh components
         } catch (error) {
             console.error('Failed to switch farm:', error);
         } finally {
@@ -70,22 +69,33 @@ function FarmSelector() {
 
                         {isOpen && (
                             <div className="farm-dropdown-menu">
-                                {user.farms.map(farm => (
-                                    <button
-                                        key={farm.id}
-                                        className={`farm-dropdown-item ${farm.id === user.activeFarmId ? 'active' : ''}`}
-                                        onClick={() => handleFarmSwitch(farm.id)}
-                                    >
-                                        <div className="farm-item-info">
-                                            <span className="farm-item-name">{farm.name}</span>
-                                            <span className="farm-item-location">
-                                                {farm.location?.district}, {farm.location?.state}
-                                            </span>
-                                        </div>
-                                        <span className="farm-item-area">{farm.landArea} ha</span>
-                                        {farm.id === user.activeFarmId && <span className="active-badge">✓</span>}
-                                    </button>
-                                ))}
+                                {/* Sort farms: active first, then by name */}
+                                {[...user.farms]
+                                    .sort((a, b) => {
+                                        if (a.id === user.activeFarmId) return -1;
+                                        if (b.id === user.activeFarmId) return 1;
+                                        return a.name.localeCompare(b.name);
+                                    })
+                                    .map(farm => (
+                                        <button
+                                            key={farm.id}
+                                            className={`farm-dropdown-item ${farm.id === user.activeFarmId ? 'active' : ''}`}
+                                            onClick={() => handleFarmSwitch(farm.id)}
+                                            disabled={loading}
+                                        >
+                                            <div className="farm-item-info">
+                                                <span className="farm-item-name">
+                                                    {farm.id === user.activeFarmId && '📍 '}
+                                                    {farm.name}
+                                                </span>
+                                                <span className="farm-item-location">
+                                                    {farm.location?.village || farm.location?.district || 'Unknown'}, {farm.location?.state || ''}
+                                                </span>
+                                            </div>
+                                            <span className="farm-item-area">{farm.landArea || 0} ha</span>
+                                            {farm.id === user.activeFarmId && <span className="active-badge">✓ Active</span>}
+                                        </button>
+                                    ))}
 
                                 <div className="dropdown-divider"></div>
 

@@ -5,6 +5,7 @@ import { APIProvider, Map, AdvancedMarker } from '@vis.gl/react-google-maps';
 import Navbar from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
 import RiskIndicator from '../components/RiskIndicator';
+import ErrorBoundary from '../components/ErrorBoundary';
 import { climateAPI, profileAPI } from '../utils/api';
 import './MapDashboard.css';
 import './TooltipStyles.css';
@@ -123,29 +124,39 @@ function Dashboard() {
             )}
 
             <div className="map-container">
-                <APIProvider apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'YOUR_GOOGLE_MAPS_API_KEY'}>
-                    <Map
-                        mapId="kishan-saathi-map"
-                        center={displayLocation}
-                        zoom={14}
-                        gestureHandling="greedy"
-                        disableDefaultUI={false}
-                        style={{ width: '100%', height: '100%' }}
-                    >
-                        <AdvancedMarker
-                            position={displayLocation}
-                            onMouseEnter={() => setShowTooltip(true)}
-                            onMouseLeave={() => setShowTooltip(false)}
+                <ErrorBoundary
+                    fallbackIcon="🗺️"
+                    fallbackTitle="Map could not be loaded"
+                    fallbackMessage="Please check your Google Maps API key in the .env file. The map will work once configured correctly."
+                    minHeight="100%"
+                >
+                    <APIProvider apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'YOUR_GOOGLE_MAPS_API_KEY'}>
+                        <Map
+                            key={`map-${user?.activeFarmId || 'default'}-${displayLocation.lat}-${displayLocation.lng}`}
+                            mapId="kishan-saathi-map"
+                            center={displayLocation}
+                            zoom={14}
+                            gestureHandling="greedy"
+                            disableDefaultUI={false}
+                            style={{ width: '100%', height: '100%' }}
                         >
-                            <div className="custom-marker">
-                                <div className="marker-pin">{currentLocation ? '📍' : '🏠'}</div>
-                                <div className="marker-label">
-                                    {currentLocation ? 'Current Location' : user.farmDetails.location.district}
+                            <AdvancedMarker
+                                position={displayLocation}
+                                onMouseEnter={() => setShowTooltip(true)}
+                                onMouseLeave={() => setShowTooltip(false)}
+                            >
+                                <div className="custom-marker">
+                                    <div className="marker-pin">{currentLocation ? '📍' : '🏠'}</div>
+                                    <div className="marker-label">
+                                        {currentLocation
+                                            ? 'Current Location'
+                                            : (user?.farmDetails?.name || user?.farmDetails?.location?.district || 'Your Farm')}
+                                    </div>
                                 </div>
-                            </div>
-                        </AdvancedMarker>
-                    </Map>
-                </APIProvider>
+                            </AdvancedMarker>
+                        </Map>
+                    </APIProvider>
+                </ErrorBoundary>
 
                 {/* Tooltip on Hover */}
                 {showTooltip && climateData && (
