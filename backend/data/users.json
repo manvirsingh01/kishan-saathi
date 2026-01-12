@@ -1,0 +1,13 @@
+[
+    {
+        "id": "demo_user_001",
+        "name": "Kishan Demo",
+        "email": "demo@kishansaathi.com",
+        "password": "$2a$10$XQf8Kx8N5qL9mxK5nO7vXeC3hB5xJ5mN5vC5bD5gF5jH5kL5mN5oQ",
+        "phone": "9876543210",
+        "role": "farmer",
+        "activeFarmId": "farm_demo_001",
+        "createdAt": "2024-01-01T00:00:00.000Z",
+        "updatedAt": "2024-01-01T00:00:00.000Z"
+    }
+]

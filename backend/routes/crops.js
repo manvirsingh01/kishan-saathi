@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { authMiddleware } = require('../middleware/auth');
-const CropRecommendation = require('../models/CropRecommendation');
+// CropRecommendation model disabled for serverless compatibility
+// const CropRecommendation = require('../models/CropRecommendation');
 const cropAI = require('../services/cropAI');
 const climateEngine = require('../services/climateEngine');
 const weatherService = require('../services/weatherService');
@@ -46,14 +47,14 @@ router.post('/recommend', authMiddleware, async (req, res) => {
         // Get AI recommendations
         const aiResult = await cropAI.generateCropRecommendations(params);
 
-        // Save recommendations (using Sequelize)
-        await CropRecommendation.create({
-            userId: user.id,
-            inputParams: params,
-            recommendations: aiResult.recommendations,
-            aiModel: aiResult.aiModel,
-            season: params.season
-        });
+        // Database save disabled for serverless compatibility
+        // await CropRecommendation.create({
+        //     userId: user.id,
+        //     inputParams: params,
+        //     recommendations: aiResult.recommendations,
+        //     aiModel: aiResult.aiModel,
+        //     season: params.season
+        // });
 
         res.json({
             recommendations: aiResult.recommendations,
@@ -75,18 +76,8 @@ router.post('/recommend', authMiddleware, async (req, res) => {
 // @access  Private
 router.get('/history', authMiddleware, async (req, res) => {
     try {
-        const { limit = 10 } = req.query;
-
-        const history = await CropRecommendation.findAll({
-            where: {
-                userId: req.user.id,
-                isActive: true
-            },
-            order: [['createdAt', 'DESC']],
-            limit: parseInt(limit)
-        });
-
-        res.json({ history });
+        // Database disabled for serverless - return empty history
+        res.json({ history: [] });
     } catch (error) {
         console.error('Crop history fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch recommendation history' });
@@ -98,18 +89,8 @@ router.get('/history', authMiddleware, async (req, res) => {
 // @access  Private
 router.get('/recommendation/:id', authMiddleware, async (req, res) => {
     try {
-        const recommendation = await CropRecommendation.findOne({
-            where: {
-                id: req.params.id,
-                userId: req.user.id
-            }
-        });
-
-        if (!recommendation) {
-            return res.status(404).json({ error: 'Recommendation not found' });
-        }
-
-        res.json({ recommendation });
+        // Database disabled for serverless
+        res.status(404).json({ error: 'Recommendation history not available in serverless mode' });
     } catch (error) {
         console.error('Recommendation fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch recommendation' });

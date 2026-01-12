@@ -1,31 +1,24 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const { FileUserModel } = require('../models/fileModels');
 
-// Verify JWT token middleware
+/**
+ * Authentication middleware using file-based models
+ */
 const authMiddleware = async (req, res, next) => {
     try {
-        // Get token from header
         const token = req.header('Authorization')?.replace('Bearer ', '');
 
         if (!token) {
             return res.status(401).json({ error: 'No authentication token, access denied' });
         }
 
-        // Verify token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        // Get user from database
-        const user = await User.findByPk(decoded.userId);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'kishan_saathi_secret_key');
+        const user = await FileUserModel.getWithFarmDetails(decoded.userId);
 
         if (!user) {
             return res.status(401).json({ error: 'User not found, token invalid' });
         }
 
-        if (!user.isActive) {
-            return res.status(401).json({ error: 'Account is deactivated' });
-        }
-
-        // Attach user to request
         req.user = user;
         next();
     } catch (error) {
@@ -34,10 +27,12 @@ const authMiddleware = async (req, res, next) => {
     }
 };
 
-// Admin authorization middleware
-const adminMiddleware = (req, res, next) => {
-    if (req.user.role !== 'admin') {
-        return res.status(403).json({ error: 'Access denied. Admin privileges required.' });
+/**
+ * Admin middleware
+ */
+const adminMiddleware = async (req, res, next) => {
+    if (!req.user || req.user.role !== 'admin') {
+        return res.status(403).json({ error: 'Admin access required' });
     }
     next();
 };

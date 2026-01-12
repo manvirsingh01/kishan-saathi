@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const sequelize = require('./config/database');
 
 // Load environment variables
 dotenv.config();
@@ -11,17 +10,21 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: '*',
   credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Sync database (force on Vercel since /tmp is empty on cold starts)
-const isVercel = process.env.VERCEL === '1';
-sequelize.sync({ force: isVercel })
-  .then(() => console.log('✅ SQLite database synced successfully'))
-  .catch((err) => console.error('❌ SQLite sync error:', err));
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'Kishan Saathi API is running',
+    database: 'File-based JSON storage',
+    timestamp: new Date().toISOString()
+  });
+});
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
@@ -34,21 +37,12 @@ app.use('/api/analytics', require('./routes/analytics'));
 app.use('/api/government', require('./routes/government'));
 app.use('/api/soil-reports', require('./routes/soilReports'));
 
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    message: 'Kishan Saathi API is running',
-    timestamp: new Date().toISOString()
-  });
-});
-
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('Server Error:', err.stack);
+  console.error('Server Error:', err.message);
   res.status(500).json({
     error: 'Something went wrong!',
-    message: process.env.NODE_ENV === 'development' ? err.message : undefined
+    message: err.message
   });
 });
 
@@ -57,14 +51,14 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Start server only in development (not on Vercel)
+// Start server for local development
+const PORT = process.env.PORT || 5001;
 if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.PORT || 5001;
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log('📁 Using file-based JSON storage');
   });
 }
 
-// Export for Vercel serverless
+// Export for Vercel
 module.exports = app;
