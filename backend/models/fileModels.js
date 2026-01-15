@@ -1,8 +1,59 @@
 const bcrypt = require('bcryptjs');
+const fs = require('fs');
+const path = require('path');
 
-// Load initial data from JS modules (Guarantees bundling on Vercel)
-let usersCache = require('../data/users');
-let farmsCache = require('../data/farms');
+// File paths
+const usersFilePath = path.join(__dirname, '../data/users.json');
+const farmsFilePath = path.join(__dirname, '../data/farms.json');
+
+// Helper to save data
+function saveUsers() {
+    try {
+        fs.writeFileSync(usersFilePath, JSON.stringify(usersCache, null, 4));
+    } catch (error) {
+        console.error('Error saving users:', error);
+    }
+}
+
+function saveFarms() {
+    try {
+        fs.writeFileSync(farmsFilePath, JSON.stringify(farmsCache, null, 4));
+    } catch (error) {
+        console.error('Error saving farms:', error);
+    }
+}
+
+// Load initial data from JSON files
+let usersCache = [];
+let farmsCache = [];
+
+try {
+    if (fs.existsSync(usersFilePath)) {
+        const data = fs.readFileSync(usersFilePath, 'utf8');
+        usersCache = JSON.parse(data);
+    } else {
+        // Fallback to JS module if JSON doesn't exist
+        usersCache = require('../data/users');
+        saveUsers(); // Create the JSON file
+    }
+} catch (error) {
+    console.error('Error loading users:', error);
+    usersCache = [];
+}
+
+try {
+    if (fs.existsSync(farmsFilePath)) {
+        const data = fs.readFileSync(farmsFilePath, 'utf8');
+        farmsCache = JSON.parse(data);
+    } else {
+        // Fallback to JS module if JSON doesn't exist
+        farmsCache = require('../data/farms');
+        saveFarms(); // Create the JSON file
+    }
+} catch (error) {
+    console.error('Error loading farms:', error);
+    farmsCache = [];
+}
 
 // Generate unique ID
 function generateId() {
@@ -47,6 +98,7 @@ const FileUserModel = {
         };
 
         usersCache.push(newUser);
+        saveUsers();
 
         // Create initial farm if farmDetails provided
         if (userData.farmDetails) {
@@ -85,6 +137,7 @@ const FileUserModel = {
             }
         }
         usersCache[index].updatedAt = new Date().toISOString();
+        saveUsers();
 
         return usersCache[index];
     },
@@ -165,6 +218,7 @@ const FileFarmModel = {
         };
 
         farmsCache.push(newFarm);
+        saveFarms();
 
         return {
             ...newFarm,
@@ -191,6 +245,7 @@ const FileFarmModel = {
             }
         }
         farmsCache[index].updatedAt = new Date().toISOString();
+        saveFarms();
         return farmsCache[index];
     },
 
@@ -202,6 +257,7 @@ const FileFarmModel = {
         }
 
         farmsCache.splice(index, 1);
+        saveFarms();
         return true;
     },
 
