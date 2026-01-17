@@ -54,8 +54,8 @@ A production-ready climate intelligence platform for Indian farmers, providing a
 
 ### 1. Clone the Repository
 ```bash
-git clone <repository-url>
-cd "kishan saathi"
+git clone <https://github.com/manvirsingh01/kishan-saathi.git>
+cd "kishan-saathi"
 ```
 
 ### 2. Backend Setup
