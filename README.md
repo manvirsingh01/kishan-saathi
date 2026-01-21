@@ -26,7 +26,7 @@ A production-ready climate intelligence platform for Indian farmers, providing a
 ## 🛠️ Tech Stack
 
 ### Backend
-- **Runtime**: Node.js
+- **Runtime**: Node.js. 
 - **Framework**: Express.js
 - **Database**: MongoDB with Mongoose
 - **Authentication**: JWT (jsonwebtoken), bcrypt
