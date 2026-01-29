@@ -13,7 +13,7 @@ A production-ready climate intelligence platform for Indian farmers, providing a
 - **Advanced Analytics**: Historical trends, yield loss estimation, and financial impact analysis
 - **Government Information**: Access to policies, MSP, compensation schemes, and subsidies
 - **Bilingual Interface**: English and Hindi language support
-
+  
 ### Technical Features
 - Real-time weather data integration (OpenWeather API)
 - Gemini AI for intelligent crop recommendations
