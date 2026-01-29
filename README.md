@@ -10,7 +10,7 @@ A production-ready climate intelligence platform for Indian farmers, providing a
 - **Smart Crop Recommendations**: AI-powered crop suggestions using Google Gemini
 - **Soil & Water Dashboard**: Fertility assessment and groundwater availability
 - **Climate Loss Reports**: Insurance-ready PDF reports documenting invisible yield losses
-- **Advanced Analytics**: Historical trends, yield loss estimation, and financial impact analysis
+- **Advanced Analytics**: Historical trends, yield loss estimatio  n, and financial impact analysis
 - **Government Information**: Access to policies, MSP, compensation schemes, and subsidies
 - **Bilingual Interface**: English and Hindi language support
   
