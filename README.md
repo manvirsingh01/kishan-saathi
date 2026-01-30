@@ -15,7 +15,7 @@ A production-ready climate intelligence platform for Indian farmers, providing a
 - **Bilingual Interface**: English and Hindi language support
   
 ### Technical Features
-- Real-time weather data integration (OpenWeather API)
+- Real-time weather data integration (OpenWeather API)a
 - Gemini AI for intelligent crop recommendations
 - PDF report generation for insurance claims
 - JWT-based authentication
