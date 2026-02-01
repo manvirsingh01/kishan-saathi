@@ -19,7 +19,7 @@ A production-ready climate intelligence platform for Indian farmers, providing a
 - Gemini AI for intelligent crop recommendations
 - PDF report generation for insurance claims
 - JWT-based authentication
-- Responsive design for mobile and desktop
+- Responsive design for mobile and desktop  
 - Interactive maps for farm location
 - Data visualization charts
 
